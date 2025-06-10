@@ -22,4 +22,6 @@ export class MemberService {
        public async getMember(): Promise<string>{
         return "getMember executed";
        }
+
+    
 }

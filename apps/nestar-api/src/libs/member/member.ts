@@ -53,6 +53,10 @@ export class Member {
     @Field(()=> Int,)
     memberLikes: number;
 
+    @Field(()=> String, {nullable: true})
+    memberArticles?: string
+
+
     @Field(()=> Int,)
     memberViews: number;
 

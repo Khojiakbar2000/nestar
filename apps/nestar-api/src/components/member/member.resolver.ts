@@ -9,6 +9,7 @@ import { ObjectId } from 'mongoose';
 import { MemberType } from '../../libs/enums/member.enum';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { MemberUpdate } from '../../libs/member/member.update';
 
 @Resolver()
 export class MemberResolver {
@@ -28,37 +29,41 @@ export class MemberResolver {
             return this.memberService.login(input)
         }
 
+        @UseGuards(AuthGuard)
+        @Query(()=> String)
+        public async checkAuth (@AuthMember("memberNick")memberNick: String): Promise<string>{
+            console.log("Query: checkAuth");
+            console.log("memberNick:", memberNick)
+            return `Hi ${memberNick}`;
+          
+    
+        }
+    
+    
+        @Roles(MemberType.USER, MemberType.AGENT)
+        @UseGuards(RolesGuard)
+        @Query(()=> String)
+        public async checkAuthRoles(@AuthMember()authMember: Member): Promise<string>{
+            console.log("Query: checkAuthRoles");
+          
+            return `Hi ${authMember.memberNick}, you are ${authMember.memberType}(memberId: ${authMember._id})`;
+          
+    
+        }
+
     @UseGuards(AuthGuard)
-    @Mutation(()=> String)
-    public async updateMember(@AuthMember("_id")memberId: ObjectId): Promise<string>{
+    @Mutation(()=> Member)
+    public async updateMember(@Args("input") input: MemberUpdate,
+    @AuthMember("_id")memberId: ObjectId): Promise<Member>{
         console.log("Mutation: updateMember");
-       return this.memberService.updateMember()
+       delete input._id;
+       return this.memberService.updateMember(memberId, input)
       }
 
 
 
 
-    @UseGuards(AuthGuard)
-    @Query(()=> String)
-    public async checkAuth (@AuthMember("memberNick")memberNick: String): Promise<string>{
-        console.log("Query: checkAuth");
-        console.log("memberNick:", memberNick)
-        return `Hi ${memberNick}`;
-      
-
-    }
-
-
-    @Roles(MemberType.USER, MemberType.AGENT)
-    @UseGuards(RolesGuard)
-    @Query(()=> String)
-    public async checkAuthRoles(@AuthMember()authMember: Member): Promise<string>{
-        console.log("Query: checkAuthRoles");
-      
-        return `Hi ${authMember.memberNick}, you are ${authMember.memberType}(memberId: ${authMember._id})`;
-      
-
-    }
+ 
 
     @Query(()=>String)
         public async getMember(): Promise<string>{

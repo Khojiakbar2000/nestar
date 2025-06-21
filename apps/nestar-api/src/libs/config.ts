@@ -2,7 +2,9 @@ import {ObjectId} from "bson";
 
 export const availableAgentSorts = ["createdAt", "updatedAt", "memberLikes", "memberViews", "memberRanks"]
 
+export const availableOptions = ["propertyBarter", "propertyRent"];
 export const availableMemberSorts = ["createdAt", "updatedAt", "memberLikes", "memberViews"];
+export const availablePropertySorts = ["createdAt", "updatedAt", "propertyLikes", "propertyViews","propertyRank", "propertyPrice"];
 
 
 
@@ -18,4 +20,15 @@ export const availableMemberSorts = ["createdAt", "updatedAt", "memberLikes", "m
 
 export const shapeIntoMongoObjectId = (target: any) => {
 return typeof target === "string" ? new ObjectId(target) : target;
-}
+
+
+    }
+
+    export const lookupMember = {
+        $lookup: {
+            from: "members",
+            localField: "memberId",
+            foreignField:"_id",
+            as: "memberData",
+},
+};

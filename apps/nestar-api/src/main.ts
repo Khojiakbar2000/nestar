@@ -5,8 +5,10 @@ import { LoggingInterceptor } from './libs/interceptors/Logging.interceptor';
 import { graphqlUploadExpress}from "graphql-upload"
 import * as express from 'express';
 
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.enableCors({origin: true, credentials: true})

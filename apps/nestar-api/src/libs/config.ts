@@ -6,6 +6,10 @@ export const availableOptions = ["propertyBarter", "propertyRent"];
 export const availableMemberSorts = ["createdAt", "updatedAt", "memberLikes", "memberViews"];
 export const availablePropertySorts = ["createdAt", "updatedAt", "propertyLikes", "propertyViews","propertyRank", "propertyPrice"];
 
+export const availableBoardArticleSorts = [
+    'createdAt', 'updatedAt', 'articleLikes', 'articleViews'
+]
+
 
 
 /* IMAGE CONFIGURATION **/

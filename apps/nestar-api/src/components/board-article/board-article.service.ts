@@ -60,12 +60,24 @@ public async getBoardArticle(memberId: ObjectId, articleId: ObjectId): Promise<B
             targetBoardArticle.articleViews++;
         }
 
-        //meLiked
+        const likeInput = {memberId: memberId, likeRefId: articleId, likeGroup: LikeGroup.ARTICLE};
+        targetBoardArticle.meLiked = await this.likeService.checkLikeExistence(likeInput)
+      
     }
     
     targetBoardArticle.memberData = await this.memberService.getMember(null, targetBoardArticle.memberId);
-    return targetBoardArticle;
-}
+  
+    console.log(targetBoardArticle);
+
+
+   // return targetBoardArticle;
+//}
+
+return {
+    ...targetBoardArticle,
+    meLiked: targetBoardArticle.meLiked || [],
+  };
+}  
 
 public async updateBoardArticle(memberId: ObjectId, input: BoardArticleUpdate): Promise<BoardArticle>{
     const {_id, articleStatus} = input;
@@ -119,6 +131,8 @@ public async updateBoardArticle(memberId: ObjectId, input: BoardArticleUpdate): 
     ])
     .exec();
     if(!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+   
+
 
     return result[0];
 }

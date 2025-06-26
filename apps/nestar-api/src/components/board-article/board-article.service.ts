@@ -11,12 +11,17 @@ import { BoardArticleStatus } from '../../libs/enums/board-article.enum';
 import { ViewGroup } from '../../libs/enums/view.enum';
 import { BoardArticleUpdate } from '../../libs/dto/board-article/board-article.update';
 import { lookupMember, shapeIntoMongoObjectId } from '../../libs/config';
+import { LikeInput } from '../../libs/dto/like/like.input';
+import { LikeGroup } from '../../libs/enums/like.enum';
+import { LikeService } from '../like/like.service';
+import { error } from 'console';
 
 @Injectable()
 export class BoardArticleService {
     constructor(@InjectModel("BoardArticle") private readonly boardArticleModel: Model<BoardArticle>, 
 private readonly memberService: MemberService,
 private readonly viewService: ViewService,
+private readonly likeService: LikeService,
 ){}
 
 public async createBoardArticle(memberId: ObjectId, input:BoardArticleInput): Promise<BoardArticle>{
@@ -118,6 +123,33 @@ public async updateBoardArticle(memberId: ObjectId, input: BoardArticleUpdate): 
     return result[0];
 }
 
+public async likeTargetBoardArticle(memberId: ObjectId, likeRefId:ObjectId): Promise<BoardArticle>{
+    
+    const target: BoardArticle = await this.boardArticleModel.
+    findOne({_id: likeRefId, articleStatus: BoardArticleStatus.ACTIVE}).exec();
+    if(!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
+
+    const input: LikeInput = {
+     memberId,
+     likeRefId,
+     likeGroup: LikeGroup.ARTICLE
+    };
+
+    //LIKE TOGGLE -1 +1 Like modules
+    const modifier: number = await this.likeService.toggleLike(input);
+    const result = await this.boardArticleStatsEditor({_id: likeRefId, targetKey: "articleLikes", modifier});
+
+    if(!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
+    return result;
+
+
+}
+
+
+    
+
+
+
 public async getAllBoardArticlesByAdmin( input: AllBoardArticlesInquiry): Promise<BoardArticles>{
     const {articleStatus, articleCategory} = input.search
     const match: T = {}
@@ -183,7 +215,7 @@ public async updateBoardArticleByAdmin(input: BoardArticleUpdate): Promise<Board
 
 public async boardArticleStatsEditor(input: StatisticModifier): Promise<BoardArticle>{
     const {_id, targetKey, modifier} = input;
-   return await this.boardArticleModel.findOneAndUpdate({id: _id},{$inc:{[targetKey]: modifier} }, {new: true}).exec();
+   return await this.boardArticleModel.findOneAndUpdate({_id},{$inc:{[targetKey]: modifier} }, {new: true}).exec();
 
 
    }

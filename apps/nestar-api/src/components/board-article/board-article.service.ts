@@ -70,14 +70,10 @@ public async getBoardArticle(memberId: ObjectId, articleId: ObjectId): Promise<B
     console.log(targetBoardArticle);
 
 
-   // return targetBoardArticle;
-//}
+    return targetBoardArticle;
+}
 
-return {
-    ...targetBoardArticle,
-    meLiked: targetBoardArticle.meLiked || [],
-  };
-}  
+
 
 public async updateBoardArticle(memberId: ObjectId, input: BoardArticleUpdate): Promise<BoardArticle>{
     const {_id, articleStatus} = input;

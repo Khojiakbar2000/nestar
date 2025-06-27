@@ -89,7 +89,7 @@ public async likeTargetBoardArticle(@Args("articleId") input: string,
      @Roles(MemberType.ADMIN)
      @UseGuards(RolesGuard)
      @Mutation((returns)=> BoardArticle)
-     public async updateBoardArticlesByAdmin(@Args('input') input: BoardArticleUpdate,
+     public async updateBoardArticleByAdmin(@Args('input') input: BoardArticleUpdate,
       @AuthMember("_id")memberId: ObjectId
      ): Promise<BoardArticle>{
         console.log("Mutation: updateBoardArticldByAdmin")

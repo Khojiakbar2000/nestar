@@ -86,6 +86,18 @@ export class PropertyResolver {
       
       }
 
+      @UseGuards(AuthGuard)
+      @Query((returns) => Properties)
+      public async getVisited(
+      @Args('input')input:OrdinaryInquiry ,
+       @AuthMember("_id") memberId: ObjectId,
+      ): Promise<Properties> {
+        console.log("Query: getVisited")
+        
+           return await this.propertyService.getVisited(memberId, input)
+       
+       }
+
      @UseGuards(WithoutGuard)
      @Query((returns) => Properties)
      public async getAgentProperties(

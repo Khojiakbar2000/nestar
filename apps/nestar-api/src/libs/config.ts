@@ -44,7 +44,7 @@ return typeof target === "string" ? new ObjectId(target) : target;
             {
                 $match: {
                   $expr: {
-                    $and:[{$eq: ["$likeRefId", "$$localLikeRefId"]}, {$eq: ["$memberId", "localMemberId"]}],
+                    $and:[{$eq: ["$likeRefId", "$$localLikeRefId"]}, {$eq: ["$memberId", "$$localMemberId"]}],
                   },  
                 },
             },

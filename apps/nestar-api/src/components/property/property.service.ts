@@ -97,7 +97,7 @@ if(soldAt || deletedAt) {
 return result;
 }
 
-public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties>{
+ public async getProperties(memberId: ObjectId, input: PropertiesInquiry): Promise<Properties>{
     const match: T = {propertyStatus: PropertyStatus.ACTIVE};
     const sort: T = {[input?.sort ?? "createdAt"]: input?.direction ?? Direction.DESC};
 

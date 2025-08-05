@@ -38,7 +38,7 @@ export class FollowService {
         return await this.followModel.create({
             followingId: followingId,
             followerId: followerId,
-        });
+        })
        }catch(err){
         console.log("Error, Service.model:", err.message);
         throw new BadRequestException(Message.CREATE_FAILED);
@@ -53,7 +53,7 @@ export class FollowService {
         const result = await this.followModel.findOneAndDelete({
             followingId:followingId,
             followerId: followerId,
-        })
+        }).exec();
 
         await this.memberService.
         memberStatsEditor({_id: followerId, targetKey: "memberFollowings", modifier: -1});

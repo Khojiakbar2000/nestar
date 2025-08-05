@@ -69,8 +69,12 @@ constructor(
                 memberId: memberId,
                 commentStatus: CommentStatus.ACTIVE,
             },
-            input,{new: true},
-        );
+        
+            input,{new: true
+
+            },
+           
+        ).exec();
     if(!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
     return result;
 
